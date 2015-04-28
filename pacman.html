@@ -4,14 +4,39 @@
 		<link rel="shortcut icon" type="image/png" href="img/favicon.ico"/>
 		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-		<script src="./app.js"></script>
+		<script type="text/javascript" src="./js/config.js"></script>
+		<script type="text/javascript" src="./js/pacman.js"></script>
+		<script src="./js/app.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="css/styles.css">
 	</head>
 
 	<body>
-		<form>
-			Enter your name:
-			<input type="text" name="username">
-			<input type="submit" value="Start" id="btnCreateGame">
-		</form>
+		<div id="gameArea">
+
+		</div>
+
+		<script id="intro-screen-template" type="text/template">
+			<form>
+				<input type="button" value="Start" id="btnCreateGame">
+				<input type="button" value="Join" id="btnJoinGame">
+			</form>
+		</script>
+
+		<script id="create-game-template" type="text/template">
+			<div>
+				Game id: <span id="gameId"></span>
+				<span id="waiting"> Waiting for player </span>
+				<canvas id="canvas"></canvas>
+			</div>
+		</script>
+
+		<script id="join-game-template" type="text/template">
+			<p>Enter Game id:</p>
+			<input type="text" id="inputGameId">
+			<input type="button" value="Start" id="btnStartGame">
+			<span id="waiting"> Waiting for player </span>
+			<canvas id="canvas"></canvas>
+		</script>
 	</body>
 </html>
