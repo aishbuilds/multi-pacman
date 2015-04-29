@@ -9,6 +9,7 @@ var IO = {
 		IO.socket.on('connected', IO.onConnected)
 		IO.socket.on('newGameCreated', IO.onNewGameCreated)
 		IO.socket.on('ghostJoinedRoom', IO.onGhostJoinedRoom)
+		IO.socket.on('updatePacmanMove', IO.updatePacmanMove)
 	},
 
 	onConnected: function (){
@@ -21,6 +22,10 @@ var IO = {
 
 	onGhostJoinedRoom: function(data){
 		App.Pacman.updateWaitingScreen(data)
+	},
+
+	updatePacmanMove: function(data){
+		App.Ghost.updatePacmanMove(data)
 	}
 }
 
@@ -49,8 +54,10 @@ var App = {
 	},
 	
 	bindEvents: function () {
-		// Host
+		// Pacman events
 		App.$doc.on('click', '#btnCreateGame', App.Pacman.onCreateClick);
+
+		// Ghost events
 		App.$doc.on('click', '#btnJoinGame', App.Ghost.onJoinClick);
 		App.$doc.on('click', '#btnStartGame', App.Ghost.onStartClick);
 	},
@@ -80,6 +87,10 @@ var App = {
 			$('#waiting').html('Player joined!')
 			var canvas = document.getElementById('canvas')
 			initCanvasGame(canvas);
+		},
+
+		pacmanMoved: function(pacmanX, pacmanY){
+			IO.socket.emit('pacmanMoved', {pacmanX: pacmanX, pacmanY: pacmanY})
 		}
 	},
 
@@ -93,6 +104,10 @@ var App = {
 				gameId: $('#inputGameId').val()
 			}
 			IO.socket.emit('ghostJoinedGame', data)
+		},
+		updatePacmanMove: function(data){
+			console.log('Pacman current position:')
+			console.log(data)
 		}
 	}
 }

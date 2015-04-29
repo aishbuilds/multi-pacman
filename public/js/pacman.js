@@ -25,7 +25,6 @@ initCanvasGame = function(canvas){
 }
 
 function initializeCanvas(canvas){
-	// var canvas = document.getElementById('canvas')
 	canvas.width = config.BOX_WIDTH * config.GRID[0].length
 	canvas.height = config.BOX_HEIGHT * config.GRID.length
 	return canvas.getContext('2d');
@@ -48,6 +47,7 @@ function updatePacmanPosition(state, keyCode, direction){
 			state.pacmanX += diff
 			eatDots(state, false, diff)
 			state = updatePacmanDirection(state, keyCode, direction);
+			App.Pacman.pacmanMoved(state.pacmanX, state.pacmanY);
 		}
 	}
 	else{
