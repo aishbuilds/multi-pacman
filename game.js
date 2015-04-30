@@ -11,6 +11,8 @@ exports.initGame = function(sio, socket){
 
 	// Ghost Events
 	gameSocket.on('ghostJoinedGame', ghostJoinedGame);
+	gameSocket.on('ghostMoved', ghostMoved);
+	gameSocket.on('gameOver', gameOver);
 }
 
 // Host events functions
@@ -42,4 +44,12 @@ function ghostJoinedGame(data){
 		this.gameId = data.gameId;
 		this.emit('initGhostScreen', data)
 	}
+}
+
+function ghostMoved(data){
+	this.broadcast.to(this.gameId).emit('updateGhostMove', data)
+}
+
+function gameOver(data){
+	io.sockets.in(this.gameId).emit('showGameOver', {})
 }

@@ -11,6 +11,8 @@ var IO = {
 		IO.socket.on('ghostJoinedRoom', IO.onGhostJoinedRoom)
 		IO.socket.on('initGhostScreen', IO.onInitGhostScreen)
 		IO.socket.on('updatePacmanMove', IO.updatePacmanMove)
+		IO.socket.on('updateGhostMove', IO.updateGhostMove)
+		IO.socket.on('showGameOver', IO.showGameOver)
 	},
 
 	onConnected: function (){
@@ -31,6 +33,14 @@ var IO = {
 
 	updatePacmanMove: function(data){
 		App.Ghost.updatePacmanMove(data)
+	},
+
+	updateGhostMove: function(data){
+		App.Pacman.updateGhostMove(data)
+	},
+
+	showGameOver: function(data){
+		App.showGameOver(data)
 	}
 }
 
@@ -56,6 +66,7 @@ var App = {
 		App.$templateNewGame = $('#create-game-template').html();
 		App.$templateJoinGame = $('#join-game-template').html();
 		App.$hostGame = $('#host-game-template').html();
+		App.$templateGameOver = $('#game-over-template').html();
 	},
 	
 	bindEvents: function () {
@@ -76,6 +87,14 @@ var App = {
 		$('#gameId').html(App.gameId)
 	},
 
+	gameOver: function(){
+		IO.socket.emit('gameOver')
+	},
+
+	showGameOver: function(){
+		App.$gameArea.html(App.$templateGameOver)
+	},
+
 	Pacman:{
 		onCreateClick: function () {
 			IO.socket.emit('pacmanCreateNewGame');
@@ -93,7 +112,11 @@ var App = {
 		},
 
 		pacmanMoved: function(state, keyCode, direction){
-			IO.socket.emit('pacmanMoved', {pacmanX: state.pacmanX, pacmanY: state.pacmanY, keyCode: keyCode, direction: direction})
+			IO.socket.emit('pacmanMoved', {X: state.X, Y: state.Y, keyCode: keyCode, direction: direction})
+		},
+
+		updateGhostMove: function(data){
+			updateGhostInPacmanScreen(data);
 		}
 	},
 
@@ -113,6 +136,10 @@ var App = {
 		},
 		updatePacmanMove: function(data){
 			updatePacmanInGhostScreen(data);
+		},
+
+		ghostMoved: function(state, keyCode, direction){
+			IO.socket.emit('ghostMoved', {X: state.X, Y: state.Y, keyCode: keyCode, direction: direction})
 		}
 	}
 }

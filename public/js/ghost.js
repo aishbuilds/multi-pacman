@@ -4,21 +4,29 @@ initGhostScreen = function(canvas){
 	var ctx = initializeCanvas(canvas);
 
 	pacmanState = {
-		pacmanX: 60,
-		pacmanY: 60,
+		X: 60,
+		Y: 60,
 		lastPressedKey: 37,
 		pacManDirection: 'left',
 		dots: []
 	}
 
 	ghostState = {
-		ghostX: 120,
-		ghostY: 60,
-		lastPressedKey: 37,
-		ghostDirection: 'left'
+		X: 180,
+		Y: 60,
+		lastPressedKey: 39,
+		ghostDirection: 'right'
 	}
 
+	window.addEventListener("keydown", function(e){
+		ghostState = updateGhost(ghostState, e.keyCode)
+	})
+
 	function tickGhostScreen(){
+		if(ghostState.X == pacmanState.X && ghostState.Y == pacmanState.Y){
+			App.gameOver();
+		}
+		ghostState = updateGhost(ghostState, ghostState.lastPressedKey)
 		clear(ctx);
 		draw(ctx, pacmanState);
 		drawGhost(ctx, ghostState);
@@ -29,13 +37,18 @@ initGhostScreen = function(canvas){
 	
 }
 
+function updateGhost(ghostState, keyCode){
+	ghostState = updatePacmanPosition(ghostState, keyCode, config.KEY_DIRECTIONS[keyCode], false)
+	return ghostState;
+}
+
 function updatePacmanInGhostScreen(data){
 	pacmanState = updatePacmanPositionInGhostScreen(data)
 }
 
 function updatePacmanPositionInGhostScreen(data){
-	pacmanState.pacmanX = data.pacmanX
-	pacmanState.pacmanY = data.pacmanY
+	pacmanState.X = data.X
+	pacmanState.Y = data.Y
 	
 
 	var diff = data.direction == 'right' || data.direction == 'down' ? 2 : -2
@@ -53,6 +66,6 @@ function updatePacmanPositionInGhostScreen(data){
 function drawGhost(ctx, ghostState){
 	ctx.fillStyle = '#D0342B'
 	// Arc of ghost
-	ctx.arc(ghostState.ghostX, ghostState.ghostY, 20, 0, 2*Math.PI, false);
+	ctx.arc(ghostState.X, ghostState.Y, 20, 0, 2*Math.PI, false);
 	ctx.fill();
 }

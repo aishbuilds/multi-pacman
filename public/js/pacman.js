@@ -1,12 +1,21 @@
+var ghostState;
+
 initCanvasGame = function(canvas){
 	var ctx = initializeCanvas(canvas);
 
 	var state = {
-		pacmanX: 60,
-		pacmanY: 60,
+		X: 60,
+		Y: 60,
 		lastPressedKey: 37,
 		pacManDirection: 'left',
 		dots: []
+	}
+
+	ghostState = {
+		X: 260,
+		Y: 260,
+		lastPressedKey: 37,
+		ghostDirection: 'left'
 	}
 
 	window.addEventListener("keydown", function(e){
@@ -17,6 +26,7 @@ initCanvasGame = function(canvas){
 		state = update(state, state.lastPressedKey)
 		clear(ctx);
 		draw(ctx, state);
+		drawGhost(ctx, ghostState);
 		window.requestAnimationFrame(tick);
 	}
 
@@ -35,26 +45,36 @@ function clear(ctx){
 }
 
 function update(state, keyCode){
-	state = updatePacmanPosition(state, keyCode, config.KEY_DIRECTIONS[keyCode])
+	state = updatePacmanPosition(state, keyCode, config.KEY_DIRECTIONS[keyCode], true)
 	return state;
 }
 
-function updatePacmanPosition(state, keyCode, direction){
+function updatePacmanPosition(state, keyCode, direction, isPacman){
 	var diff = direction == 'right' || direction == 'down' ? 2 : -2
 	if(direction == 'right' || direction == 'left'){
-		if(moveAllowed(state, 'pacmanX', 'pacmanY', direction)){
-			state.pacmanX += diff
-			eatDots(state, false, diff)
+		if(moveAllowed(state, 'X', 'Y', direction)){
+			state.X += diff
 			state = updatePacmanDirection(state, keyCode, direction);
-			App.Pacman.pacmanMoved(state, keyCode, direction);
+			if(isPacman){
+				eatDots(state, false, diff)
+				App.Pacman.pacmanMoved(state, keyCode, direction);
+			}
+			else{
+				App.Ghost.ghostMoved(state, keyCode, direction)
+			}
 		}
 	}
 	else{
-		if(moveAllowed(state, 'pacmanY', 'pacmanX', direction)){
-			state.pacmanY += diff
-			eatDots(state, true, diff)
+		if(moveAllowed(state, 'Y', 'X', direction)){
+			state.Y += diff
 			state = updatePacmanDirection(state, keyCode, direction);
-			App.Pacman.pacmanMoved(state, keyCode, direction);
+			if(isPacman){
+				eatDots(state, true, diff)
+				App.Pacman.pacmanMoved(state, keyCode, direction);
+			}
+			else{
+				App.Ghost.ghostMoved(state, keyCode, direction)
+			}
 		}
 	}
 	return state;
@@ -130,10 +150,10 @@ function drawPacman(ctx, state){
 	ctx.strokeStyle="#000000"
 
 	// Arc of pacman
-	ctx.arc(state.pacmanX, state.pacmanY, config.PACMAN.radius, config.PACMAN[state.pacManDirection].startAngle, config.PACMAN[state.pacManDirection].endAngle, false	)
+	ctx.arc(state.X, state.Y, config.PACMAN.radius, config.PACMAN[state.pacManDirection].startAngle, config.PACMAN[state.pacManDirection].endAngle, false	)
 	
 	// Mouth
-	ctx.lineTo(state.pacmanX + config.PACMAN[state.pacManDirection].dMouthX, state.pacmanY+ config.PACMAN[state.pacManDirection].dMouthY)
+	ctx.lineTo(state.X + config.PACMAN[state.pacManDirection].dMouthX, state.Y+ config.PACMAN[state.pacManDirection].dMouthY)
 	
 	ctx.fill();
 	ctx.stroke();
@@ -141,18 +161,18 @@ function drawPacman(ctx, state){
 	// eyes
 	ctx.beginPath();
 	ctx.fillStyle = "#000000"
-	ctx.arc(state.pacmanX + config.PACMAN[state.pacManDirection].dEyesX,	state.pacmanY + config.PACMAN[state.pacManDirection].dEyesY, 2, 0, Math.PI*2, false)
+	ctx.arc(state.X + config.PACMAN[state.pacManDirection].dEyesX,	state.Y + config.PACMAN[state.pacManDirection].dEyesY, 2, 0, Math.PI*2, false)
 	ctx.fill();
 }
 
 function eatDots(state, isVertical, diff){
 	if(isVertical){
-		dotY = state.pacmanY + (diff * 4)
-		key = state.dots[state.pacmanX + " " + dotY]
+		dotY = state.Y + (diff * 4)
+		key = state.dots[state.X + " " + dotY]
 	}
 	else{
-		dotX = state.pacmanX + (diff * 4)
-		key = state.dots[dotX + " " + state.pacmanY]
+		dotX = state.X + (diff * 4)
+		key = state.dots[dotX + " " + state.Y]
 	}
 	
 	if(key){
@@ -173,8 +193,8 @@ function moveAllowed(state, wallPosition, adjustPosition, direction){
 }
 
 function getNeighbors(state, direction){
-	var xIndex = Math.floor(state.pacmanX/config.BOX_WIDTH);
-	var yIndex = Math.floor(state.pacmanY/config.BOX_WIDTH);
+	var xIndex = Math.floor(state.X/config.BOX_WIDTH);
+	var yIndex = Math.floor(state.Y/config.BOX_WIDTH);
 	neighbors = {}
 
 	switch(direction){
@@ -223,4 +243,19 @@ function adjustPacman(neighbors, state, position){
 		if(diff < 20 || diff > 20)
 			state[position] = (state[position] - (state[position] % config.BOX_WIDTH)) + 20
 	}
+}
+
+function updateGhostInPacmanScreen(data){
+	ghostState.X = data.X
+	ghostState.Y = data.Y
+	
+
+	var diff = data.direction == 'right' || data.direction == 'down' ? 2 : -2
+	if(data.direction == 'right' || data.direction == 'left'){
+		ghostState = updatePacmanDirection(ghostState, data.keyCode, data.direction);	
+	}
+	else{
+		ghostState = updatePacmanDirection(ghostState, data.keyCode, data.direction);
+	}
+	return ghostState;
 }
