@@ -5,8 +5,9 @@
 		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 		<script type="text/javascript" src="./js/config.js"></script>
-		<script type="text/javascript" src="./js/pacman.js"></script>
 		<script src="./js/app.js"></script>
+		<script type="text/javascript" src="./js/pacman.js"></script>
+		<script type="text/javascript" src="./js/ghost.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="css/styles.css">
 	</head>
@@ -27,7 +28,7 @@
 			<div>
 				Game id: <span id="gameId"></span>
 				<span id="waiting"> Waiting for player </span>
-				<canvas id="canvas"></canvas>
+				<canvas id="canvas" class="canvas"></canvas>
 			</div>
 		</script>
 
@@ -36,7 +37,7 @@
 			<input type="text" id="inputGameId">
 			<input type="button" value="Start" id="btnStartGame">
 			<span id="waiting"> Waiting for player </span>
-			<canvas id="canvas-ghost"></canvas>
+			<canvas id="canvas-ghost" class="canvas"></canvas>
 		</script>
 	</body>
 </html>

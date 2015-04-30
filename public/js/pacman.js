@@ -41,13 +41,12 @@ function update(state, keyCode){
 
 function updatePacmanPosition(state, keyCode, direction){
 	var diff = direction == 'right' || direction == 'down' ? 2 : -2
-
 	if(direction == 'right' || direction == 'left'){
 		if(moveAllowed(state, 'pacmanX', 'pacmanY', direction)){
 			state.pacmanX += diff
 			eatDots(state, false, diff)
 			state = updatePacmanDirection(state, keyCode, direction);
-			App.Pacman.pacmanMoved(state.pacmanX, state.pacmanY);
+			App.Pacman.pacmanMoved(state, keyCode, direction);
 		}
 	}
 	else{
@@ -55,6 +54,7 @@ function updatePacmanPosition(state, keyCode, direction){
 			state.pacmanY += diff
 			eatDots(state, true, diff)
 			state = updatePacmanDirection(state, keyCode, direction);
+			App.Pacman.pacmanMoved(state, keyCode, direction);
 		}
 	}
 	return state;

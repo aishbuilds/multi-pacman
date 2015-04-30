@@ -9,6 +9,7 @@ var IO = {
 		IO.socket.on('connected', IO.onConnected)
 		IO.socket.on('newGameCreated', IO.onNewGameCreated)
 		IO.socket.on('ghostJoinedRoom', IO.onGhostJoinedRoom)
+		IO.socket.on('initGhostScreen', IO.onInitGhostScreen)
 		IO.socket.on('updatePacmanMove', IO.updatePacmanMove)
 	},
 
@@ -22,6 +23,10 @@ var IO = {
 
 	onGhostJoinedRoom: function(data){
 		App.Pacman.updateWaitingScreen(data)
+	},
+
+	onInitGhostScreen: function(data){
+		App.Ghost.initGhostScreen(data)
 	},
 
 	updatePacmanMove: function(data){
@@ -68,13 +73,11 @@ var App = {
 
 	displayNewGameScreen: function(){
 		App.$gameArea.html(App.$templateNewGame)
-		console.log(App.gameId)
 		$('#gameId').html(App.gameId)
 	},
 
 	Pacman:{
 		onCreateClick: function () {
-			console.log('Clicked "Create A Game"');
 			IO.socket.emit('pacmanCreateNewGame');
 		},
 
@@ -89,14 +92,13 @@ var App = {
 			initCanvasGame(canvas);
 		},
 
-		pacmanMoved: function(pacmanX, pacmanY){
-			IO.socket.emit('pacmanMoved', {pacmanX: pacmanX, pacmanY: pacmanY})
+		pacmanMoved: function(state, keyCode, direction){
+			IO.socket.emit('pacmanMoved', {pacmanX: state.pacmanX, pacmanY: state.pacmanY, keyCode: keyCode, direction: direction})
 		}
 	},
 
 	Ghost:{
 		onJoinClick: function(){
-			console.log('Clicked "Join a game"');
 			App.$gameArea.html(App.$templateJoinGame);
 		},
 		onStartClick: function(){
@@ -105,9 +107,12 @@ var App = {
 			}
 			IO.socket.emit('ghostJoinedGame', data)
 		},
+		initGhostScreen: function(data){
+			var canvas = document.getElementById('canvas-ghost')
+			initGhostScreen(canvas)
+		},
 		updatePacmanMove: function(data){
-			console.log('Pacman current position:')
-			console.log(data)
+			updatePacmanInGhostScreen(data);
 		}
 	}
 }

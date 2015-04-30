@@ -1,6 +1,6 @@
 var io;
 var gameSocket;
-// var exports = module.exports = {};
+
 exports.initGame = function(sio, socket){
 	io = sio;
 	gameSocket = socket;
@@ -27,7 +27,7 @@ function pacmanCreateNewGame(){
 }
 
 function pacmanMoved(data){
-	io.sockets.in(this.gameId).emit('updatePacmanMove', data)
+	this.broadcast.to(this.gameId).emit('updatePacmanMove', data)
 }
 
 // Ghost events function
@@ -40,5 +40,6 @@ function ghostJoinedGame(data){
 		io.sockets.in(data.gameId).emit('ghostJoinedRoom', data)
 		this.join(data.gameId)
 		this.gameId = data.gameId;
+		this.emit('initGhostScreen', data)
 	}
 }
