@@ -1,9 +1,9 @@
-var state;
+var pacmanState;
 
 initGhostScreen = function(canvas){
 	var ctx = initializeCanvas(canvas);
 
-	state = {
+	pacmanState = {
 		pacmanX: 60,
 		pacmanY: 60,
 		lastPressedKey: 37,
@@ -11,9 +11,17 @@ initGhostScreen = function(canvas){
 		dots: []
 	}
 
+	ghostState = {
+		ghostX: 120,
+		ghostY: 60,
+		lastPressedKey: 37,
+		ghostDirection: 'left'
+	}
+
 	function tickGhostScreen(){
 		clear(ctx);
-		draw(ctx, state);
+		draw(ctx, pacmanState);
+		drawGhost(ctx, ghostState);
 		window.requestAnimationFrame(tickGhostScreen);
 	}
 
@@ -22,22 +30,29 @@ initGhostScreen = function(canvas){
 }
 
 function updatePacmanInGhostScreen(data){
-	state = updatePacmanPositionInGhostScreen(data)
+	pacmanState = updatePacmanPositionInGhostScreen(data)
 }
 
 function updatePacmanPositionInGhostScreen(data){
-	state.pacmanX = data.pacmanX
-	state.pacmanY = data.pacmanY
+	pacmanState.pacmanX = data.pacmanX
+	pacmanState.pacmanY = data.pacmanY
 	
 
 	var diff = data.direction == 'right' || data.direction == 'down' ? 2 : -2
 	if(data.direction == 'right' || data.direction == 'left'){
-		eatDots(state, false, diff)
-		state = updatePacmanDirection(state, data.keyCode, data.direction);	
+		eatDots(pacmanState, false, diff)
+		pacmanState = updatePacmanDirection(pacmanState, data.keyCode, data.direction);	
 	}
 	else{
-		eatDots(state, true, diff)
-		state = updatePacmanDirection(state, data.keyCode, data.direction);
+		eatDots(pacmanState, true, diff)
+		pacmanState = updatePacmanDirection(pacmanState, data.keyCode, data.direction);
 	}
-	return state;
+	return pacmanState;
+}
+
+function drawGhost(ctx, ghostState){
+	ctx.fillStyle = '#D0342B'
+	// Arc of ghost
+	ctx.arc(ghostState.ghostX, ghostState.ghostY, 20, 0, 2*Math.PI, false);
+	ctx.fill();
 }
