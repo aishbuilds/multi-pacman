@@ -23,9 +23,7 @@ initGhostScreen = function(canvas){
 	})
 
 	function tickGhostScreen(){
-		if(ghostState.X == pacmanState.X && ghostState.Y == pacmanState.Y){
-			App.gameOver('Ghost');
-		}
+		checkGameOver(ghostState, pacmanState)
 		ghostState = updateGhost(ghostState, ghostState.lastPressedKey)
 		clear(ctx);
 		draw(ctx, pacmanState);
@@ -37,6 +35,14 @@ initGhostScreen = function(canvas){
 	
 }
 
+function checkGameOver(ghostState, pacmanState){
+	var xDiff = Math.abs(ghostState.X - pacmanState.X)
+	var yDiff = Math.abs(ghostState.Y - pacmanState.Y)
+	
+	if(xDiff >= 0 && xDiff <= 15 && yDiff >= 0 && yDiff <= 15){
+		App.gameOver('Ghost');
+	}
+}
 function updateGhost(ghostState, keyCode){
 	ghostState = updatePacmanPosition(ghostState, keyCode, config.KEY_DIRECTIONS[keyCode], false)
 	return ghostState;
