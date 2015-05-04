@@ -39,10 +39,16 @@ function ghostJoinedGame(data){
 
 	console.log("Joined room:" + room)
 	if(room != undefined){
-		io.sockets.in(data.gameId).emit('ghostJoinedRoom', data)
-		this.join(data.gameId)
-		this.gameId = data.gameId;
-		this.emit('initGhostScreen', data)
+		noUsers = Object.keys(room).length
+		if(noUsers == 2){
+			this.emit('notifyRoomFull', {})
+		}
+		else{
+			io.sockets.in(data.gameId).emit('ghostJoinedRoom', data)
+			this.join(data.gameId)
+			this.gameId = data.gameId;
+			this.emit('initGhostScreen', data)
+		}
 	}
 }
 

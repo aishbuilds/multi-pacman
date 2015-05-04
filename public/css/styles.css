@@ -2,3 +2,19 @@
 	border: 1px solid black;
 	background-color: #000000;
 }
+
+#initial-buttons{
+	margin-top: 100px;
+}
+
+.btn{
+	margin-left: 20px;
+}
+
+.title{
+	margin-bottom: 20px;
+}
+
+#pacman-img{
+	margin-top: 20px;
+}

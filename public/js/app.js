@@ -13,6 +13,7 @@ var IO = {
 		IO.socket.on('updatePacmanMove', IO.updatePacmanMove)
 		IO.socket.on('updateGhostMove', IO.updateGhostMove)
 		IO.socket.on('showGameOver', IO.showGameOver)
+		IO.socket.on('notifyRoomFull', IO.notifyRoomFull)
 	},
 
 	onConnected: function (){
@@ -41,6 +42,10 @@ var IO = {
 
 	showGameOver: function(data){
 		App.showGameOver(data)
+	},
+
+	notifyRoomFull: function(data){
+		App.showRoomFull(data)
 	}
 }
 
@@ -67,6 +72,7 @@ var App = {
 		App.$templateJoinGame = $('#join-game-template').html();
 		App.$hostGame = $('#host-game-template').html();
 		App.$templateGameOver = $('#game-over-template').html();
+		App.$templateRoomFull = $('#room-full-template').html();
 	},
 	
 	bindEvents: function () {
@@ -94,6 +100,10 @@ var App = {
 	showGameOver: function(data){
 		App.$gameArea.html(App.$templateGameOver)
 		$('#winner').html(data.winner)
+	},
+
+	showRoomFull: function(data){
+		App.$gameArea.html(App.$templateRoomFull)
 	},
 
 	Pacman:{
