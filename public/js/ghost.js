@@ -12,8 +12,8 @@ initGhostScreen = function(canvas){
 	}
 
 	ghostState = {
-		X: 180,
-		Y: 60,
+		X: 340,
+		Y: 220,
 		lastPressedKey: 39,
 		ghostDirection: 'right'
 	}
@@ -24,7 +24,7 @@ initGhostScreen = function(canvas){
 
 	function tickGhostScreen(){
 		if(ghostState.X == pacmanState.X && ghostState.Y == pacmanState.Y){
-			App.gameOver();
+			App.gameOver('Ghost');
 		}
 		ghostState = updateGhost(ghostState, ghostState.lastPressedKey)
 		clear(ctx);

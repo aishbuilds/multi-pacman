@@ -8,12 +8,13 @@ initCanvasGame = function(canvas){
 		Y: 60,
 		lastPressedKey: 37,
 		pacManDirection: 'left',
-		dots: []
+		dots: [],
+		noDotsEaten: 0
 	}
 
 	ghostState = {
-		X: 260,
-		Y: 260,
+		X: 340,
+		Y: 220,
 		lastPressedKey: 37,
 		ghostDirection: 'left'
 	}
@@ -175,8 +176,11 @@ function eatDots(state, isVertical, diff){
 		key = state.dots[dotX + " " + state.Y]
 	}
 	
-	if(key){
+	if(key && !key.eaten){
 		key.eaten = true
+		state.noDotsEaten += 1
+		if(state.noDotsEaten == Object.keys(state.dots).length)
+			App.gameOver('Pacman');
 	}
 }
 

@@ -51,5 +51,5 @@ function ghostMoved(data){
 }
 
 function gameOver(data){
-	io.sockets.in(this.gameId).emit('showGameOver', {})
+	io.sockets.in(this.gameId).emit('showGameOver', data)
 }

@@ -87,12 +87,13 @@ var App = {
 		$('#gameId').html(App.gameId)
 	},
 
-	gameOver: function(){
-		IO.socket.emit('gameOver')
+	gameOver: function(winner){
+		IO.socket.emit('gameOver', {winner: winner})
 	},
 
-	showGameOver: function(){
+	showGameOver: function(data){
 		App.$gameArea.html(App.$templateGameOver)
+		$('#winner').html(data.winner)
 	},
 
 	Pacman:{
