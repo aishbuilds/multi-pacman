@@ -7,7 +7,7 @@ initCanvasGame = function(canvas){
 		X: 60,
 		Y: 60,
 		lastPressedKey: 37,
-		pacManDirection: 'left',
+		direction: 'left',
 		dots: [],
 		noDotsEaten: 0
 	}
@@ -83,7 +83,7 @@ function updatePacmanPosition(state, keyCode, direction, isPacman){
 
 function updatePacmanDirection(state, keyCode, direction){
 	state.lastPressedKey = keyCode
-	state.pacManDirection = direction
+	state.direction = direction
 	return state
 }
 
@@ -151,10 +151,10 @@ function drawPacman(ctx, state){
 	ctx.strokeStyle="#000000"
 
 	// Arc of pacman
-	ctx.arc(state.X, state.Y, config.PACMAN.radius, config.PACMAN[state.pacManDirection].startAngle, config.PACMAN[state.pacManDirection].endAngle, false	)
+	ctx.arc(state.X, state.Y, config.PACMAN.radius, config.PACMAN[state.direction].startAngle, config.PACMAN[state.direction].endAngle, false	)
 	
 	// Mouth
-	ctx.lineTo(state.X + config.PACMAN[state.pacManDirection].dMouthX, state.Y+ config.PACMAN[state.pacManDirection].dMouthY)
+	ctx.lineTo(state.X + config.PACMAN[state.direction].dMouthX, state.Y+ config.PACMAN[state.direction].dMouthY)
 	
 	ctx.fill();
 	ctx.stroke();
@@ -162,7 +162,7 @@ function drawPacman(ctx, state){
 	// eyes
 	ctx.beginPath();
 	ctx.fillStyle = "#000000"
-	ctx.arc(state.X + config.PACMAN[state.pacManDirection].dEyesX,	state.Y + config.PACMAN[state.pacManDirection].dEyesY, 2, 0, Math.PI*2, false)
+	ctx.arc(state.X + config.PACMAN[state.direction].dEyesX,	state.Y + config.PACMAN[state.direction].dEyesY, 2, 0, Math.PI*2, false)
 	ctx.fill();
 }
 

@@ -7,7 +7,7 @@ initGhostScreen = function(canvas){
 		X: 60,
 		Y: 60,
 		lastPressedKey: 37,
-		pacManDirection: 'left',
+		direction: 'left',
 		dots: []
 	}
 
@@ -15,7 +15,7 @@ initGhostScreen = function(canvas){
 		X: 340,
 		Y: 220,
 		lastPressedKey: 39,
-		ghostDirection: 'right'
+		direction: 'right'
 	}
 
 	window.addEventListener("keydown", function(e){
