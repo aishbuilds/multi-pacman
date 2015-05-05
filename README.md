@@ -1,6 +1,7 @@
 # Multiplayer Pacman game
 
 Two player pacman game: Pacman and Ghost.
+
 Built using Javascript, node.js and socket.io
 
 Live demo - https://murmuring-cove-2777.herokuapp.com/
